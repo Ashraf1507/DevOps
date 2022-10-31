@@ -1,3 +1,3 @@
-insert into roles(id, name) values (1, "admin");
-insert into roles(id, name) values (2, "instructor");
-insert into roles(id, name) values (3, "student");
+insert into roles(id, name) values (1, "ROLE_ADMIN");
+insert into roles(id, name) values (2, "ROLE_INSTRUCTOR");
+insert into roles(id, name) values (3, "ROLE_STUDENT");

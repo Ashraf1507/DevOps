@@ -1,27 +1,26 @@
 package com.agi.security;
 
 import com.agi.service.UserDetailsImpl;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.*;
 
 import java.util.Date;
 
 @Component
-public class JwtUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+public class JwTUtils {
+    private static final Logger logger = LoggerFactory.getLogger(JwTUtils.class);
 
-    @Value("${agi.app.jwtSecret}")
+    @Value("${jwtauth.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${agi.app.jwtExpirationMs}")
+    @Value("${jwtauth.jwtExpirationMs}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()

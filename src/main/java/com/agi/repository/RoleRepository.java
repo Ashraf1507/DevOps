@@ -1,11 +1,13 @@
 package com.agi.repository;
 
-import com.agi.core.ERole;
-import com.agi.core.Role;
+import com.agi.core.user.EnumRole;
+import com.agi.core.user.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-public interface RoleRepository extends JpaRepository<Role, Integer> {
-    Optional<Role> findByName(ERole name);
+@Repository
+public interface RoleRepository extends JpaRepository<Role, Long> {
+    Optional<Role> findByName(EnumRole name);
 }
