@@ -1,16 +1,10 @@
 package com.agi.controller;
 
-import com.agi.Utils.AppConstants;
-import com.agi.core.Course;
-import com.agi.core.user.EnumRole;
-import com.agi.core.user.User;
 import com.agi.payload.request.CourseRequest;
 import com.agi.payload.response.CourseResponse;
 import com.agi.payload.response.MessageResponse;
-import com.agi.payload.response.PagedResponse;
 import com.agi.service.CourseService;
 import com.agi.service.UserDetailsImpl;
-import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +28,28 @@ public class CourseController {
         List<CourseResponse> courseResponses = courseService.index();
         return new ResponseEntity<>(courseResponses, HttpStatus.OK);
     }
+
+    @GetMapping("/instructor")
+    @PreAuthorize("hasRole(\"ROLE_INSTRUCTOR\")")
+    public ResponseEntity<List<CourseResponse>> indexByInstructor(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<CourseResponse> courseResponses = courseService.indexByInstructor(userDetails.getId());
+        return new ResponseEntity<>(courseResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/student")
+    @PreAuthorize("hasRole(\"ROLE_STUDENT\")")
+    public ResponseEntity<List<CourseResponse>> indexByStudent(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<CourseResponse> courseResponses = courseService.indexByStudent(userDetails.getId());
+        return new ResponseEntity<>(courseResponses, HttpStatus.OK);
+    }
+
+    @PostMapping("/student/{id}")
+    @PreAuthorize("hasRole(\"ROLE_STUDENT\")")
+    public ResponseEntity<MessageResponse> addCourseToStudent(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        MessageResponse messageResponse = courseService.addCourseToStudent(id, userDetails.getId());
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+    }
+
 
     @PostMapping
     @PreAuthorize("hasRole(\"ROLE_INSTRUCTOR\")")

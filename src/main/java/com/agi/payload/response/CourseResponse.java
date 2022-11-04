@@ -2,6 +2,8 @@ package com.agi.payload.response;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class CourseResponse {
     private Long course_id;
@@ -11,4 +13,5 @@ public class CourseResponse {
     private String course_duration;
     private String course_price;
     private String course_original_price;
+    private List<String> course_authors;
 }
