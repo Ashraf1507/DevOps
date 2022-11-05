@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -49,5 +50,9 @@ public class UserServiceImpl implements UserService {
     public void userToUserResponse(User user, UserResponse userResponse){
         userResponse.setUsername(user.getUsername());
         userResponse.setEmail(user.getEmail());
+        userResponse.setId(user.getId());
+        List<String> roles = new ArrayList<>();
+        roles.add("ROLE_STUDENT");
+        userResponse.setRoles(roles);
     }
 }
