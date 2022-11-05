@@ -40,7 +40,7 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseResponse> index() {
         List<Course> courses = courseRepository.findAll();
         List<CourseResponse> courseResponses = new ArrayList<>();
-        for (Course course: courses){
+        for (Course course : courses) {
             CourseResponse courseResponse = new CourseResponse();
             courseToCourseResponse(course, courseResponse);
             courseResponses.add(courseResponse);
@@ -80,21 +80,21 @@ public class CourseServiceImpl implements CourseService {
         CourseByIdConverter courseByIdConverter = new CourseByIdConverter(courseRepository);
         Course course = courseByIdConverter.convert(course_id);
         studentCourseRepository.save(new StudentCourse(student, course));
-        return new  MessageResponse("Added Course To Student");
+        return new MessageResponse("Added Course To Student");
     }
 
 
-    public CourseResponse create(CourseRequest courseRequest) {
+    public CourseResponse create(CourseRequest courseRequest, Long id) {
         Course course = new Course();
         courseRequestToCourse(course, courseRequest);
         Course newCourse = courseRepository.save(course);
-        setInstructorsToTheirCourse(newCourse, courseRequest);
+        setInstructorsToTheirCourse(newCourse, courseRequest, id);
         CourseResponse courseResponse = new CourseResponse();
         courseToCourseResponse(newCourse, courseResponse);
         return courseResponse;
     }
 
-    public CourseResponse show(Long id){
+    public CourseResponse show(Long id) {
         CourseByIdConverter courseByIdConverter = new CourseByIdConverter(courseRepository);
         Course course = courseByIdConverter.convert(id);
         CourseResponse courseResponse = new CourseResponse();
@@ -104,7 +104,7 @@ public class CourseServiceImpl implements CourseService {
         return courseResponse;
     }
 
-    public CourseResponse update(Long id, CourseRequest courseRequest){
+    public CourseResponse update(Long id, CourseRequest courseRequest) {
         CourseByIdConverter courseByIdConverter = new CourseByIdConverter(courseRepository);
         Course course = courseByIdConverter.convert(id);
         CourseResponse courseResponse = new CourseResponse();
@@ -123,10 +123,10 @@ public class CourseServiceImpl implements CourseService {
         if (course != null) {
             courseRepository.delete(course);
         }
-        return new  MessageResponse("The course is deleted successfully");
+        return new MessageResponse("The course is deleted successfully");
     }
 
-    private void courseToCourseResponse(Course course, CourseResponse courseResponse){
+    private void courseToCourseResponse(Course course, CourseResponse courseResponse) {
         courseResponse.setCourse_id(course.getId());
         courseResponse.setCourse_name(course.getName());
         courseResponse.setCourse_desc(course.getDesc());
@@ -136,13 +136,13 @@ public class CourseServiceImpl implements CourseService {
         courseResponse.setCourse_original_price(course.getOriginal_price());
         List<InstructorCourse> instructorCourses = instructorCourseRepository.findInstructorCourseByCourse(course);
         List<String> authors = new ArrayList<>();
-        for (InstructorCourse instructorCourse: instructorCourses){
+        for (InstructorCourse instructorCourse : instructorCourses) {
             authors.add(instructorCourse.getInstructor().getUsername());
         }
         courseResponse.setCourse_authors(authors);
     }
 
-    private void courseRequestToCourse(Course course,CourseRequest courseRequest){
+    private void courseRequestToCourse(Course course, CourseRequest courseRequest) {
         course.setName(courseRequest.getCourse_name());
         course.setDesc(courseRequest.getCourse_desc());
         course.setImg(courseRequest.getCourse_img());
@@ -151,12 +151,11 @@ public class CourseServiceImpl implements CourseService {
         course.setOriginal_price(courseRequest.getCourse_original_price());
     }
 
-    private void setInstructorsToTheirCourse(Course course, CourseRequest courseRequest){
+    private void setInstructorsToTheirCourse(Course course, CourseRequest courseRequest, Long id) {
         UserByIdConverter userByIdConverter = new UserByIdConverter(userRepository);
-        for (String author: courseRequest.getCourse_authors()){
-            User instructor = userByIdConverter.convertByUsername(author);
-            instructorCourseRepository.save(new InstructorCourse(instructor, course));
-        }
+        User instructor = userByIdConverter.convert(id);
+        instructorCourseRepository.save(new InstructorCourse(instructor, course));
+
     }
 
 }

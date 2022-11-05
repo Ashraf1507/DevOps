@@ -13,7 +13,7 @@ public interface CourseService {
     List<CourseResponse> indexByStudent(Long id);
 
     MessageResponse addCourseToStudent(Long course_id, Long student_id);
-    CourseResponse create(CourseRequest courseRequest);
+    CourseResponse create(CourseRequest courseRequest, Long id);
     CourseResponse show(Long id);
     CourseResponse update(Long id, CourseRequest courseRequest);
     MessageResponse delete(Long id);

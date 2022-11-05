@@ -54,7 +54,7 @@ public class CourseController {
     @PostMapping
     @PreAuthorize("hasRole(\"ROLE_INSTRUCTOR\")")
     public ResponseEntity<CourseResponse> create(@Valid @RequestBody CourseRequest courseRequest, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        CourseResponse courseResponse = courseService.create(courseRequest);
+        CourseResponse courseResponse = courseService.create(courseRequest, userDetails.getId());
         return new ResponseEntity<>(courseResponse, HttpStatus.CREATED);
     }
 
