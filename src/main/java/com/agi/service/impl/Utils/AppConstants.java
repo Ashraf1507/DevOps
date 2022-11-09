@@ -1,4 +1,4 @@
-package com.agi.Utils;
+package com.agi.service.impl.Utils;
 
 public class AppConstants {
     public static final String DEFAULT_PAGE_NUMBER = "0";
