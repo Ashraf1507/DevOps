@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface StudentCourseRepository extends JpaRepository<StudentCourse, Long> {
-    public List<StudentCourse> findInstructorCourseByCourse(Course course);
-    public List<StudentCourse> findInstructorCourseByStudent(User student);
+    public List<StudentCourse> findStudentCoursesByCourse(Course course);
+    public List<StudentCourse> findStudentCoursesByStudent(User student);
 }

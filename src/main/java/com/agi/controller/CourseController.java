@@ -66,7 +66,7 @@ public class CourseController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole(\"ROLE_INSTRUCTOR\")")
-    public ResponseEntity<CourseResponse> show(@PathVariable Long id, @Valid @RequestBody CourseRequest courseRequest){
+    public ResponseEntity<CourseResponse> update(@PathVariable Long id, @Valid @RequestBody CourseRequest courseRequest){
         CourseResponse courseResponse = courseService.update(id, courseRequest);
         return new ResponseEntity<>(courseResponse, HttpStatus.OK);
     }
@@ -75,6 +75,13 @@ public class CourseController {
     @PreAuthorize("hasRole(\"ROLE_INSTRUCTOR\") or hasRole(\"ROLE_ADMIN\")")
     public ResponseEntity<MessageResponse> delete(@PathVariable Long id){
         MessageResponse messageResponse = courseService.delete(id);
-        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        if (!messageResponse.getMessage().contains("found")){
+            if (messageResponse.getMessage().contains("not")){
+                return new ResponseEntity<>(messageResponse, HttpStatus.UNAUTHORIZED);
+            }
+            return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(messageResponse, HttpStatus.NO_CONTENT);
+        }
     }
 }

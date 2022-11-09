@@ -52,7 +52,7 @@ public class CourseServiceImpl implements CourseService {
         List<CourseResponse> courseResponses = new ArrayList<>();
         UserByIdConverter userByIdConverter = new UserByIdConverter(userRepository);
         User instructor = userByIdConverter.convert(id);
-        List<InstructorCourse> instructorCourses = instructorCourseRepository.findInstructorCourseByInstructor(instructor);
+        List<InstructorCourse> instructorCourses = instructorCourseRepository.findInstructorCoursesByInstructor(instructor);
         for (InstructorCourse instructorCourse : instructorCourses) {
             CourseResponse courseResponse = new CourseResponse();
             courseToCourseResponse(instructorCourse.getCourse(), courseResponse);
@@ -65,7 +65,7 @@ public class CourseServiceImpl implements CourseService {
         List<CourseResponse> courseResponses = new ArrayList<>();
         UserByIdConverter userByIdConverter = new UserByIdConverter(userRepository);
         User student = userByIdConverter.convert(id);
-        List<StudentCourse> studentCourses = studentCourseRepository.findInstructorCourseByStudent(student);
+        List<StudentCourse> studentCourses = studentCourseRepository.findStudentCoursesByStudent(student);
         for (StudentCourse studentCourse : studentCourses) {
             CourseResponse courseResponse = new CourseResponse();
             courseToCourseResponse(studentCourse.getCourse(), courseResponse);
@@ -121,9 +121,21 @@ public class CourseServiceImpl implements CourseService {
         CourseByIdConverter courseByIdConverter = new CourseByIdConverter(courseRepository);
         Course course = courseByIdConverter.convert(id);
         if (course != null) {
-            courseRepository.delete(course);
+            List<StudentCourse> studentCourses = studentCourseRepository.findStudentCoursesByCourse(course);
+            System.out.println("tbn");
+            System.out.println(studentCourses);
+            if (studentCourses.isEmpty()) {
+                List<InstructorCourse> instructorCourses = instructorCourseRepository.findInstructorCoursesByCourse(course);
+                instructorCourseRepository.deleteAll(instructorCourses);
+                courseRepository.delete(course);
+                return new MessageResponse("Course deleted successfully");
+            }
+            else {
+                return new MessageResponse("Course not deleted");
+            }
+        } else {
+            return new MessageResponse("Course not found");
         }
-        return new MessageResponse("The course is deleted successfully");
     }
 
     private void courseToCourseResponse(Course course, CourseResponse courseResponse) {
@@ -134,7 +146,7 @@ public class CourseServiceImpl implements CourseService {
         courseResponse.setCourse_duration(course.getDuration());
         courseResponse.setCourse_price(course.getPrice());
         courseResponse.setCourse_original_price(course.getOriginal_price());
-        List<InstructorCourse> instructorCourses = instructorCourseRepository.findInstructorCourseByCourse(course);
+        List<InstructorCourse> instructorCourses = instructorCourseRepository.findInstructorCoursesByCourse(course);
         List<String> authors = new ArrayList<>();
         for (InstructorCourse instructorCourse : instructorCourses) {
             authors.add(instructorCourse.getInstructor().getUsername());

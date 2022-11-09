@@ -9,6 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface InstructorCourseRepository extends JpaRepository<InstructorCourse, Long> {
-    public List<InstructorCourse> findInstructorCourseByCourse(Course course);
-    public List<InstructorCourse> findInstructorCourseByInstructor(User instructor);
+    public List<InstructorCourse> findInstructorCoursesByCourse(Course course);
+    public List<InstructorCourse> findInstructorCoursesByInstructor(User instructor);
 }
