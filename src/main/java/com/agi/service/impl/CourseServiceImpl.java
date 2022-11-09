@@ -4,16 +4,16 @@ import com.agi.converter.CourseByIdConverter;
 import com.agi.converter.UserByIdConverter;
 import com.agi.core.Course;
 import com.agi.core.InstructorCourse;
+import com.agi.core.Lesson;
 import com.agi.core.StudentCourse;
 import com.agi.core.user.User;
 import com.agi.payload.request.CourseRequest;
 import com.agi.payload.response.CourseResponse;
+import com.agi.payload.response.LessonResponse;
 import com.agi.payload.response.MessageResponse;
-import com.agi.repository.CourseRepository;
-import com.agi.repository.InstructorCourseRepository;
-import com.agi.repository.StudentCourseRepository;
-import com.agi.repository.UserRepository;
+import com.agi.repository.*;
 import com.agi.service.CourseService;
+import com.agi.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +36,11 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    LessonService lessonService;
+
+    @Autowired
+    LessonRepository lessonRepository;
 
     public List<CourseResponse> index() {
         List<Course> courses = courseRepository.findAll();
@@ -125,6 +130,8 @@ public class CourseServiceImpl implements CourseService {
             System.out.println("tbn");
             System.out.println(studentCourses);
             if (studentCourses.isEmpty()) {
+                List<Lesson> lessons = lessonRepository.findAllByCourse(course);
+                lessonRepository.deleteAll(lessons);
                 List<InstructorCourse> instructorCourses = instructorCourseRepository.findInstructorCoursesByCourse(course);
                 instructorCourseRepository.deleteAll(instructorCourses);
                 courseRepository.delete(course);
@@ -138,6 +145,17 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+    @Override
+    public MessageResponse deleteByStudent(Long course_id, Long student_id) {
+        UserByIdConverter userByIdConverter = new UserByIdConverter(userRepository);
+        User student = userByIdConverter.convert(student_id);
+        CourseByIdConverter courseByIdConverter = new CourseByIdConverter(courseRepository);
+        Course course = courseByIdConverter.convert(course_id);
+        StudentCourse studentCourse = studentCourseRepository.findStudentCourseByCourseAndStudent(course, student);
+        studentCourseRepository.delete(studentCourse);
+        return new MessageResponse("You have been successfully sign out from this course");
+    }
+
     private void courseToCourseResponse(Course course, CourseResponse courseResponse) {
         courseResponse.setCourse_id(course.getId());
         courseResponse.setCourse_name(course.getName());
@@ -146,6 +164,7 @@ public class CourseServiceImpl implements CourseService {
         courseResponse.setCourse_duration(course.getDuration());
         courseResponse.setCourse_price(course.getPrice());
         courseResponse.setCourse_original_price(course.getOriginal_price());
+        courseResponse.setCourse_lessons(lessonService.index(course.getId()));
         List<InstructorCourse> instructorCourses = instructorCourseRepository.findInstructorCoursesByCourse(course);
         List<String> authors = new ArrayList<>();
         for (InstructorCourse instructorCourse : instructorCourses) {
