@@ -17,5 +17,6 @@ public interface CourseService {
     CourseResponse show(Long id);
     CourseResponse update(Long id, CourseRequest courseRequest);
     MessageResponse delete(Long id);
+    MessageResponse deleteByStudent(Long course_id, Long student_id);
 
 }
