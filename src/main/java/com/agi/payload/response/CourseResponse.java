@@ -14,4 +14,6 @@ public class CourseResponse {
     private String course_price;
     private String course_original_price;
     private List<String> course_authors;
+    private List<LessonResponse> course_lessons;
+
 }
