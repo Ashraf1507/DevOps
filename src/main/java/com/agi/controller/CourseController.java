@@ -47,7 +47,7 @@ public class CourseController {
     @PreAuthorize("hasRole(\"ROLE_STUDENT\")")
     public ResponseEntity<MessageResponse> addCourseToStudent(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         MessageResponse messageResponse = courseService.addCourseToStudent(id, userDetails.getId());
-        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
     }
 
 
@@ -83,5 +83,12 @@ public class CourseController {
         } else {
             return new ResponseEntity<>(messageResponse, HttpStatus.NO_CONTENT);
         }
+    }
+
+    @DeleteMapping("/student/{id}")
+    @PreAuthorize("hasRole(\"ROLE_STUDENT\")")
+    public ResponseEntity<MessageResponse> deleteByStudent(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        MessageResponse messageResponse = courseService.deleteByStudent(id, userDetails.getId());
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 }
