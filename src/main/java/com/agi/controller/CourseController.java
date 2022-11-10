@@ -65,7 +65,7 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole(\"ROLE_INSTRUCTOR\")")
+    @PreAuthorize("hasRole(\"ROLE_INSTRUCTOR\")  or hasRole(\"ROLE_ADMIN\")")
     public ResponseEntity<CourseResponse> update(@PathVariable Long id, @Valid @RequestBody CourseRequest courseRequest){
         CourseResponse courseResponse = courseService.update(id, courseRequest);
         return new ResponseEntity<>(courseResponse, HttpStatus.OK);
