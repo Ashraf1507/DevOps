@@ -33,6 +33,7 @@ public class LessonServiceImpl implements LessonService {
         for (Lesson lesson: lessons){
             LessonResponse lessonResponse = new LessonResponse();
             lessonToLessonResponse(lesson, lessonResponse);
+            lessonResponse.setCourse_id(course_id);
             lessonResponses.add(lessonResponse);
         }
         return lessonResponses;
@@ -83,6 +84,10 @@ public class LessonServiceImpl implements LessonService {
         lessonResponse.setLesson_name(lesson.getName());
         lessonResponse.setLesson_desc(lesson.getDesc());
         lessonResponse.setLesson_url(lesson.getUrl());
+        CourseByIdConverter courseByIdConverter = new CourseByIdConverter(courseRepository);
+        Course course = courseByIdConverter.convert(lesson.getCourse().getId());
+        assert course != null;
+        lessonResponse.setCourse_id(course.getId());
     }
 
     private void lessonRequestToLesson(Lesson lesson, LessonRequest lessonRequest){
