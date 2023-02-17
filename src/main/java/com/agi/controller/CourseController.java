@@ -61,7 +61,12 @@ public class CourseController {
     @GetMapping("/{id}")
     public ResponseEntity<CourseResponse> show(@PathVariable Long id){
         CourseResponse courseResponse = courseService.show(id);
-        return new ResponseEntity<>(courseResponse, HttpStatus.OK);
+        if(courseResponse!=null){
+            return new ResponseEntity<>(courseResponse, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(courseResponse , HttpStatus.NO_CONTENT);
+        }
     }
 
     @PutMapping("/{id}")
@@ -91,4 +96,6 @@ public class CourseController {
         MessageResponse messageResponse = courseService.deleteByStudent(id, userDetails.getId());
         return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
+
+
 }
