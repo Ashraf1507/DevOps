@@ -13,5 +13,11 @@ pipeline {
       }
     }
 
+    stage('ClasseTest') {
+      steps {
+        sh 'mvn test -Dtest=CourseTest'
+      }
+    }
+
   }
 }
